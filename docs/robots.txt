@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tpmn-psl.gemsquared.ai/sitemap.xml

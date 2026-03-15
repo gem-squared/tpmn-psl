@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TPMN-PSL — Don't write prompts. Write specifications.</title>
+  <meta name="description" content="The open epistemic markup standard for AI reasoning. Platform-agnostic. Formally grounded. Built to make AI know what it doesn't know.">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #1e1e2e;
+      --accent: #7c6af7;
+      --accent2: #4ecdc4;
+      --text: #e2e2f0;
+      --muted: #888899;
+      --grounded: #4ecdc4;
+      --inferred: #7c6af7;
+      --extrap: #f7a94e;
+      --unknown: #888899;
+      --spec: #f7654e;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand { font-family: var(--mono); font-weight: 700; font-size: 1rem; color: var(--accent); letter-spacing: 0.04em; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #fff; padding: 0.4rem 1.2rem;
+      border-radius: 6px; font-size: 0.875rem; font-weight: 600;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,106,247,0.12) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(124,106,247,0.1); border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 999px; padding: 0.3rem 1rem;
+      font-size: 0.8rem; color: var(--accent); margin-bottom: 2rem;
+      font-family: var(--mono);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted); max-width: 600px;
+      margin-bottom: 2.5rem; line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      padding: 0.75rem 2rem; border-radius: 8px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 24px rgba(124,106,247,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 32px rgba(124,106,247,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      padding: 0.75rem 2rem; border-radius: 8px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      border: 1px solid var(--border); transition: border-color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); }
+
+    /* ── BEFORE/AFTER ── */
+    .demo { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .demo h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .demo-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+    .compare-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem; font-family: var(--mono); font-size: 0.85rem;
+    }
+    .compare-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 1rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .before .compare-label { color: var(--spec); }
+    .after .compare-label { color: var(--grounded); }
+    .tag-g { color: var(--grounded); }
+    .tag-i { color: var(--inferred); }
+    .tag-e { color: var(--extrap); }
+    .tag-u { color: var(--unknown); }
+
+    /* ── SYMBOLS ── */
+    .symbols { padding: 5rem 2rem; background: var(--surface); }
+    .symbols-inner { max-width: 900px; margin: 0 auto; }
+    .symbols h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .symbols-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .symbol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+    .symbol-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .symbol-card:hover { transform: translateY(-3px); }
+    .symbol-card:nth-child(1) { border-color: rgba(78,205,196,0.3); }
+    .symbol-card:nth-child(2) { border-color: rgba(124,106,247,0.3); }
+    .symbol-card:nth-child(3) { border-color: rgba(247,169,78,0.3); }
+    .symbol-card:nth-child(4) { border-color: rgba(136,136,153,0.3); }
+    .symbol-card:nth-child(5) { border-color: rgba(247,101,78,0.3); }
+    .sym { font-family: var(--mono); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .sym-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+    .sym-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── PROTOCOL ── */
+    .protocol { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .protocol h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .protocol-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+    @media (max-width: 640px) { .phases { grid-template-columns: 1fr; } }
+    .phase-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+    }
+    .phase-label {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .phase-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .phase-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .flow {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem;
+      font-family: var(--mono); font-size: 0.85rem;
+      color: var(--muted); text-align: center; letter-spacing: 0.03em;
+    }
+    .flow span { color: var(--accent); }
+
+    /* ── MANDATE ── */
+    .mandate { padding: 5rem 2rem; background: var(--surface); }
+    .mandate-inner { max-width: 900px; margin: 0 auto; }
+    .mandate h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .mandate-sub { color: var(--muted); margin-bottom: 2rem; }
+    .mandate-eq {
+      background: var(--bg); border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 12px; padding: 1.5rem;
+      font-family: var(--mono); font-size: 0.9rem;
+      margin-bottom: 2rem; line-height: 1.8;
+    }
+    .mandate-props { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    @media (max-width: 640px) { .mandate-props { grid-template-columns: 1fr; } }
+    .prop-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem;
+    }
+    .prop-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2); margin-bottom: 0.25rem; }
+    .prop-desc { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── SPT ── */
+    .spt { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .spt h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .spt-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .spt-grid { display: grid; gap: 1rem; }
+    .spt-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--extrap);
+      border-radius: 12px; padding: 1.25rem;
+    }
+    .spt-pattern { font-family: var(--mono); font-size: 0.9rem; font-weight: 700; color: var(--extrap); margin-bottom: 0.25rem; }
+    .spt-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .spt-ex { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 6rem 2rem; text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(124,106,247,0.1) 0%, transparent 70%);
+    }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+    .cta-section p { color: var(--muted); margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem;
+      text-align: center; color: var(--muted); font-size: 0.8rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    section { scroll-margin-top: 56px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TPMN-PSL</div>
+  <div class="nav-links">
+    <a href="#symbols">Symbols</a>
+    <a href="#protocol">Protocol</a>
+    <a href="#mandate">MANDATE</a>
+    <a href="#spt">SPT</a>
+    <a href="https://github.com/gem-squared/tpmn-psl/tree/main/spec">Spec</a>
+  </div>
+  <a class="nav-cta" href="https://github.com/gem-squared/tpmn-psl" target="_blank">GitHub ↗</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span>⬡</span> TPMN-PSL v0.1.5-p · Public · CC-BY 4.0
+  </div>
+  <h1>Don't write prompts.<br>Write specifications.</h1>
+  <p class="hero-sub">
+    For complex, high-stakes AI workflows: the open epistemic markup standard for AI reasoning.
+    Platform-agnostic. Formally grounded.
+    Built to make AI know what it doesn't know — and mark it at every step.
+  </p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/gem-squared/tpmn-psl" target="_blank">Read the Spec</a>
+    <a class="btn-secondary" href="#symbols">See the 5 Symbols</a>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="demo" id="demo">
+  <h2>The difference TPMN makes</h2>
+  <p class="demo-sub">Same information. One version is auditable. One isn't.</p>
+  <div class="compare">
+    <div class="compare-card before">
+      <div class="compare-label">Without TPMN</div>
+      This architecture scales well and will handle production load. The latency will stay under 50ms at peak traffic. The team agrees this is the right approach.
+    </div>
+    <div class="compare-card after">
+      <div class="compare-label">With TPMN</div>
+      This architecture handled 10k RPS in staging <span class="tag-g">⊢</span>.<br>
+      Production load is estimated at 15k RPS <span class="tag-i">⊨</span> (Q3 traffic model).<br>
+      Latency under 50ms at peak <span class="tag-e">⊬</span> (no production benchmark yet).<br>
+      Team consensus on approach <span class="tag-i">⊨</span> (3 of 4 engineers).
+    </div>
+  </div>
+</section>
+
+<!-- SYMBOLS -->
+<section class="symbols" id="symbols">
+  <div class="symbols-inner">
+    <h2>The 5 epistemic symbols</h2>
+    <p class="symbols-sub">Every non-trivial claim in a TPMN-governed output carries exactly one tag.</p>
+    <div class="symbol-grid">
+      <div class="symbol-card">
+        <div class="sym tag-g">⊢</div>
+        <div class="sym-name">Grounded</div>
+        <div class="sym-desc">Directly supported by input or verifiable fact</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-i">⊨</div>
+        <div class="sym-name">Inferred</div>
+        <div class="sym-desc">Derived from grounded claims; inference chain visible</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-e">⊬</div>
+        <div class="sym-name">Extrapolated</div>
+        <div class="sym-desc">Beyond evidence; basis must be explicitly stated</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-u">⊥</div>
+        <div class="sym-name">Unknown</div>
+        <div class="sym-desc">Knowledge gap; stops inference chain</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-u">?</div>
+        <div class="sym-name">Speculative</div>
+        <div class="sym-desc">Possible but unverified</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOCOL -->
+<section class="protocol" id="protocol">
+  <h2>Three-phase checking protocol</h2>
+  <p class="protocol-sub">P-phase validates before. Inline tags during. O-phase verifies after. All three against the same CONTRACT.</p>
+  <div class="phases">
+    <div class="phase-card">
+      <div class="phase-label">P-phase · Before</div>
+      <div class="phase-name">Pre-flight</div>
+      <div class="phase-desc">Extract CONTRACT from prompt. Establish A_Priori_Grid. Define the computable MANDATE before inference begins.</div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-label">Inline · During</div>
+      <div class="phase-name">Generation</div>
+      <div class="phase-desc">Tag every non-trivial claim with its epistemic symbol as it is written. Continuous recalibration against the MANDATE.</div>
+    </div>
+    <div class="phase-card">
+      <div class="phase-label">O-phase · After</div>
+      <div class="phase-name">Post-flight</div>
+      <div class="phase-desc">Verify output against CONTRACT. Check SPT violations. Produce O_Record: epistemic_score ∈ [0,1], contract_score ∈ [0,1], truth_score ∈ [0,100] (integer %). Gate or pass.</div>
+    </div>
+  </div>
+  <div class="flow">
+    Prompt → <span>[P-phase]</span> → LLM → <span>[Inline]</span> → Output → <span>[O-phase]</span> → Trust
+  </div>
+</section>
+
+<!-- MANDATE -->
+<section class="mandate" id="mandate">
+  <div class="mandate-inner">
+    <h2>The MANDATE</h2>
+    <p class="mandate-sub">TPMN's core transformation: NL ambiguity → computable specification space.</p>
+    <div class="mandate-eq">
+      NL prompt → <span style="color:var(--accent)">MANDATE</span> = CONTRACT + A_Priori_Grid + Panini_Categories<br><br>
+      <span style="color:var(--muted)">Once the MANDATE is established, the LLM reasons within it —<br>
+      not against hoped-for intent, but against a bounded, decidable structure.</span>
+    </div>
+    <div class="mandate-props">
+      <div class="prop-card">
+        <div class="prop-name">Computable</div>
+        <div class="prop-desc">Category membership rules are decidable: ∀x ∈ D: x ∈ Sᵢ ∨ x ∉ Sᵢ</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">Provable</div>
+        <div class="prop-desc">Outputs can be formally verified against the CONTRACT in O-phase</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">Traceable</div>
+        <div class="prop-desc">Every claim traces back to a P-phase category or carries ⊬ escalation</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-name">Bounded</div>
+        <div class="prop-desc">Scope is explicit. Out-of-scope claims are structurally prohibited without ⊬</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SPT -->
+<section class="spt" id="spt">
+  <h2>Structural Prohibition Taxonomy</h2>
+  <p class="spt-sub">Three inference patterns that TPMN-governed output must never produce.</p>
+  <div class="spt-grid">
+    <div class="spt-card">
+      <div class="spt-pattern">S → T</div>
+      <div class="spt-name">State → Trait</div>
+      <div class="spt-ex">"This model is slow" (benchmark result) → "This model is inherently slow" (permanent property)</div>
+    </div>
+    <div class="spt-card">
+      <div class="spt-pattern">L → G</div>
+      <div class="spt-name">Local → Global</div>
+      <div class="spt-ex">"Works in our staging environment" → "Works in all production environments"</div>
+    </div>
+    <div class="spt-card">
+      <div class="spt-pattern">Δe → ∫de</div>
+      <div class="spt-name">Incremental → Mass</div>
+      <div class="spt-ex">One data point → broad universal claim without stated evidence count</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Start with the spec.</h2>
+  <p>Read the full TPMN-PSL v0.1.5-p specification. Extend it for your domain. Build on it.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/gem-squared/tpmn-psl/blob/main/spec/tpmn-psl-v015p.md" target="_blank">Read Full Spec</a>
+    <a class="btn-secondary" href="https://github.com/gem-squared/tpmn-psl/blob/main/extensions/template/tpmn-domain-spec-0.1.5-p.md" target="_blank">Extension Template</a>
+  </div>
+</section>
+
+<footer>
+  TPMN-PSL v0.1.5-p · Inseok Seo · CC-BY 4.0 · 2026 ·
+  <a href="https://github.com/gem-squared/tpmn-psl" target="_blank">GitHub</a>
+</footer>
+
+</body>
+</html>

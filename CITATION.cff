@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+title: "TPMN-PSL: Truth-Provenance Markup Notation — Platform Specification Language"
+version: "0.1.5-p"
+date-released: "2026-03-16"
+license: CC-BY-4.0
+repository-code: "https://github.com/gem-squared/tpmn-psl"
+url: "https://tpmn-psl.gemsquared.ai"
+abstract: >
+  TPMN-PSL is a platform-agnostic formal epistemic specification language
+  for structuring, validating, and auditing AI reasoning. It defines a
+  four-layer notation grammar (TLA+, Panini, Math, NL), a five-tag epistemic
+  taxonomy (⊢ ⊨ ⊬ ⊥ ?), a three-phase checking protocol (P / Inline / O),
+  and a Structural Prohibition Taxonomy (SPT) for forbidden inference patterns.
+  Its primary contribution is the Panini ontological discretization layer —
+  a formal mechanism for transforming NL prompts into computable, provable,
+  traceable MANDATEs before LLM inference begins.
+keywords:
+  - epistemic markup
+  - AI reasoning
+  - formal specification
+  - hallucination prevention
+  - LLM verification
+  - ontological discretization
+  - truth provenance
+  - specification language
+authors:
+  - family-names: "Seo"
+    given-names: "Inseok"
+    alias: "David Seo"
+    affiliation: "GEM²"
+    country: KR
+message: >
+  If you use TPMN-PSL in your research, tools, or platforms,
+  please cite it using this metadata.
