@@ -194,6 +194,35 @@
     .prop-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2); margin-bottom: 0.25rem; }
     .prop-desc { font-size: 0.85rem; color: var(--muted); }
 
+    /* ── MODES ── */
+    .modes { padding: 5rem 2rem; background: var(--surface); }
+    .modes-inner { max-width: 900px; margin: 0 auto; }
+    .modes h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .modes-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .mode-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+    @media (max-width: 640px) { .mode-grid { grid-template-columns: 1fr; } }
+    .mode-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      border-top: 3px solid var(--accent);
+    }
+    .mode-card:nth-child(2) { border-top-color: var(--accent2); }
+    .mode-card:nth-child(3) { border-top-color: var(--extrap); }
+    .mode-label {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .mode-card:nth-child(2) .mode-label { color: var(--accent2); }
+    .mode-card:nth-child(3) .mode-label { color: var(--extrap); }
+    .mode-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .mode-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .mode-returns {
+      margin-top: 0.75rem; padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.75rem; color: var(--muted);
+    }
+
     /* ── SPT ── */
     .spt { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
     .spt h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
@@ -234,6 +263,7 @@
     <a href="#symbols">Symbols</a>
     <a href="#protocol">Protocol</a>
     <a href="#mandate">MANDATE</a>
+    <a href="#modes">Modes</a>
     <a href="#spt">SPT</a>
     <a href="https://github.com/gem-squared/tpmn-psl/tree/main/spec">Spec</a>
   </div>
@@ -329,7 +359,7 @@
     <div class="phase-card">
       <div class="phase-label">O-phase · After</div>
       <div class="phase-name">Post-flight</div>
-      <div class="phase-desc">Verify output against CONTRACT. Check SPT violations. Produce O_Record: epistemic_score ∈ [0,1], contract_score ∈ [0,1], truth_score ∈ [0,100] (integer %). Gate or pass.</div>
+      <div class="phase-desc">Verify output against CONTRACT. Check SPT violations. Score via TruthReport: epistemic_score ∈ [0,1], contract_score ∈ [0,1], truth_score ∈ [0,100] (integer %). Gate or pass.</div>
     </div>
   </div>
   <div class="flow">
@@ -363,6 +393,34 @@
       <div class="prop-card">
         <div class="prop-name">Bounded</div>
         <div class="prop-desc">Scope is explicit. Out-of-scope claims are structurally prohibited without ⊬</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODES -->
+<section class="modes" id="modes">
+  <div class="modes-inner">
+    <h2>Three operational modes</h2>
+    <p class="modes-sub">v0.1.5-p formalizes three workflows. Each runs the same P-phase / O-phase protocol — they differ in what happens with the result.</p>
+    <div class="mode-grid">
+      <div class="mode-card">
+        <div class="mode-label">Strict</div>
+        <div class="mode-name">Diagnose only</div>
+        <div class="mode-desc">Evaluate content. Flag SPT violations and extrapolation. Halt on ⊬ — no rewrite. Pure audit.</div>
+        <div class="mode-returns">→ TruthReport</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-label">Refine</div>
+        <div class="mode-name">Strip overclaims</div>
+        <div class="mode-desc">Run diagnosis, then compose: remove SPT violations and ungrounded ⊬ claims using only the original input. Re-verify the result.</div>
+        <div class="mode-returns">→ TruthReport + ComposedOutput</div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-label">Interpolate</div>
+        <div class="mode-name">Suggest grounding</div>
+        <div class="mode-desc">Run diagnosis, then generate concrete search queries for each ungrounded claim. The caller fetches evidence, then re-runs as refine.</div>
+        <div class="mode-returns">→ TruthReport + SearchSuggestions</div>
       </div>
     </div>
   </div>

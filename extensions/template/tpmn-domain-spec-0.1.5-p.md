@@ -121,10 +121,13 @@ Tier2_Domain_Glyphs ≜ [
 (* ═══ §3. DOMAIN P-PHASE EXTENSIONS ═══ *)
 
 (*
-  Add domain-specific pre-flight checks (P6 onward).
-  P0–P5 from base spec are preserved and MUST still run.
-  P6 in base spec: Categories defined — apply when Panini discretization is used.
-  Extensions begin domain-specific checks at P6 if not using Panini, otherwise P7.
+  Add domain-specific pre-flight checks.
+  P0–P5 from base spec (v0.1.5-p §R3.6) are preserved and MUST still run.
+  P6 below is the standard Panini discretization check — defined here in the
+  domain extension layer, not in the base spec. Apply when the domain has
+  bounded, classifiable content. If your domain does not use Panini categories,
+  begin domain-specific checks at P6; otherwise use P6 for Panini and begin
+  domain-specific checks at P7.
 *)
 
 Domain_P_Checks ≜ [
@@ -139,7 +142,7 @@ Domain_P_Checks ≜ [
 ]
 
 Domain_P_Rationale ≜ [
-  P6: "Ontological discretization (Panini) — required when domain has bounded, classifiable content",
+  P6: "Ontological discretization (Panini) — standard domain-extension check for bounded, classifiable content; not defined in base spec P0–P5",
   P7: "[Why is this check necessary in this domain?]",
   P8: "[Why is this check necessary in this domain?]"
 ]
@@ -158,12 +161,16 @@ Domain_P_Rationale ≜ [
 
   Domain extensions begin at O9.
 
-  O_Record (from §R3 of v0.1.5-p) includes:
+  TruthReport (§R3.5 of v0.1.5-p) scoring fields:
     epistemic_score:  Real ∈ [0,1] — grounding quality
     contract_score:   Real ∈ [0,1] — contract conformance
     truth_score:      Integer ∈ [0,100] — composite heuristic %
     formula: truth_score = round(min(100, epistemic_score · contract_score · μ · 100))
     μ = 1 in PSL base (identity); calibrated by SAS at runtime
+
+  OReport (§R3.7 of v0.1.5-p) includes:
+    score:  Real ∈ [0,1] — weighted average of O-check scores
+    verdict: PASS / WARN / FAIL — derived from check evaluation
 
   Conformance: domain extensions SHOULD target L2 conformance (§R1 of v0.1.5-p).
 *)
