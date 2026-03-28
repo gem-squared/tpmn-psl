@@ -1,5 +1,5 @@
 # TPMN-PSL — Truth-Provenance Markup Notation
-## Platform Specification Language
+## Prompt Specification Language
 
 **Version:** v0.1.5-p | **Status:** Public | **License:** CC-BY 4.0
 
@@ -151,7 +151,7 @@ Domain extension template: [`/extensions/template/`](extensions/template/)
 
 **TPMN** — Truth-Provenance Markup Notation — is an open specification language for structuring and auditing AI reasoning.
 
-**TPMN-PSL** (Platform Specification Language) is the formal grammar that compiles NL prompts into computable, verifiable specifications (MANDATE).
+**TPMN-PSL** (Prompt Specification Language) is the formal grammar that compiles NL prompts into computable, verifiable specifications (MANDATE).
 
 **TPMN-checker** is a Sovereign AI Service (SAS) — the reference implementation. It runs the TPMN-PSL three-phase pipeline and returns a truth_score for any AI output.
 
@@ -197,7 +197,7 @@ TPMN-PSL is a **notation specification** — a platform-agnostic standard for ep
 
 ```bibtex
 @software{tpmn_psl_2026,
-  title   = {TPMN-PSL: Truth-Provenance Markup Notation — Platform Specification Language},
+  title   = {TPMN-PSL: Truth-Provenance Markup Notation — Prompt Specification Language},
   author  = {Seo, Inseok},
   year    = {2026},
   version = {0.1.5-p},
