@@ -24,5 +24,6 @@ We will acknowledge receipt within 7 days and provide a resolution timeline.
 
 | Version | Supported |
 |---------|-----------|
+| v0.1.6   | Yes      |
 | v0.1.5-p | Yes      |
 | < v0.1.5-p | No    |

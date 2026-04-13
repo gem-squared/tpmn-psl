@@ -5,6 +5,39 @@ Patch versions are additive or corrective only.
 
 ---
 
+## v0.1.6 — 2026-04-13
+
+**Foundational concepts: GEM² universe, ΣΔ principle, OntologicalTerms. TLA+ conventions scoped. Panini strengthened as SET extraction layer.**
+
+### Added
+- **§0.1 FOUNDATIONAL CONCEPTS** — new section between §0 Overview and §1 Grammar
+- **GEM²_Definition** — "Grounded Existence Matrix for Global Entropy Minimum" with full six-letter expansion (Grounded, Existence, Matrix, Global, Entropy, Minimum). Platform-agnostic mathematical framework; GEM².AI is one realization.
+- **ΣΔ_Principle** — "TPMN-PSL is the world of finite Σ of Δ, not infinite ∫ of δ." SET theory is the mathematical base. Connects to SPT violation Δe→∫de as the direct prohibition.
+- **OntologicalTerms** — DATA (discrete element), STATE (discrete label), STATUS (continuous measurement), THRESHOLD (cut point). STATUS is ∫δ observed; THRESHOLD discretizes into ΣΔ.
+- Six new glossary entries: GEM², ΣΔ_Principle, DATA, STATE, STATUS, THRESHOLD
+- §11 Summary gains `universe`, `principle`, `ontology` fields
+- §0 Scope updated with GEM², ΣΔ, and OntologicalTerms coverage
+
+### Changed
+- **§1.1 TLA+ Conventions** — trimmed from ~100 lines to ~33 lines. Scoped to constructs TPMN-PSL actually uses (module, extends, definitions, records, sets, sequences, functions, conditionals, let/in, comments, display conventions). Temporal/action operators explicitly excluded. Header clarifies TLA+ is one of four notation layers, not the whole system.
+- **§1.2 Panini Adaptation** — header and `primary_function` strengthened to emphasize SET extraction from NL, SET theory as mathematical base, GEM² universe, and ΣΔ transformation (∫δ → ΣΔ).
+- **§2 Symbol Governance** — Tier2 removed. Glyphs are now a single fixed set (5 epistemic + logic). Design rationale added: glyphs mark epistemic STATUS only; domain semantics belong in CONTRACT.
+- **§8 Format Prohibitions** — N4 updated: "Never redefine or extend Tier1 glyphs"
+- **§9 Extension Protocol** — E2/E3 merged; Tier2 rules removed; `example_header` updated to v0.1.6
+
+### Updated extension template
+- New `extensions/template/tpmn-domain-spec-0.1.6.md` aligned with v0.1.6
+- Added §2 Domain OntologicalTerms Binding (DATA/STATE/STATUS/THRESHOLD domain mapping)
+- `preserves` list expanded: GEM² framework, ΣΔ Principle, OntologicalTerms
+- §9 Extension Summary gains `universe`, `principle`, `ontology` fields
+
+### Backward compatibility
+- **Breaking (minor):** Tier2 domain glyphs removed. Domain-specific epistemic distinctions (evidence tier, jurisdiction, source type) now belong in CONTRACT constraints, not in additional glyph definitions. Extensions that defined Tier2 glyphs should migrate those distinctions to CONTRACT constraints.
+- New sections (§0.1) and trimmed §1.1 are additive/editorial; no existing type definitions, records, or protocols changed.
+- Extensions targeting v0.1.5-p remain valid; v0.1.6 extensions SHOULD include OntologicalTerms binding.
+
+---
+
 ## v0.1.5-p — 2026-03-16
 
 **Public reference implementation specification. Three-mode workflow, response contracts, conformance levels.**

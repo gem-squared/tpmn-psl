@@ -20,31 +20,31 @@ for their field. This is where the spec becomes useful in practice.
 - And any domain where AI makes claims that carry real consequences
 
 **What makes a good domain extension:**
-- Tier2 glyphs that map to real epistemic distinctions your field already uses
+- OntologicalTerms bindings that ground DATA/STATE/STATUS/THRESHOLD in domain reality
 - P/O checks that catch errors practitioners in your domain actually make
 - SPT violations grounded in documented failure modes, not intuition
-- CONTRACT archetypes derived from real workflows, not hypothetical ones
+- CONTRACT archetypes with domain-specific constraints (evidence tiers, jurisdiction, source types) — domain semantics live in CONTRACT, not in additional glyphs
 
 **To submit a domain extension:**
 
 1. Fork the repository
-2. Copy the template: `extensions/template/tpmn-domain-spec-0.1.5-p.md`
+2. Copy the template: `extensions/template/tpmn-domain-spec-0.1.6.md`
 3. Create: `extensions/[domain]/tpmn-[domain]-spec-0.1.0.md`
 4. Fill every `[placeholder]` with domain-grounded content
 5. Open a pull request with a brief rationale for each addition
 
 **Extension rules (from §9 of the spec):**
-- Declare `EXTENDS TPMN_PSL (* v0.1.5-p *)` in the module header
-- Tier1 glyphs `⊢ ⊨ ⊬ ⊥ ?` MUST NOT be redefined
-- New Tier2 glyphs must be defined before use
+- Declare `EXTENDS TPMN_PSL (* v0.1.6 *)` in the module header
+- Tier1 glyphs `⊢ ⊨ ⊬ ⊥ ?` are fixed — MUST NOT be redefined or extended. Domain-specific distinctions belong in CONTRACT constraints (F: A → B | P), not in additional symbols.
 - P0–P5 and O1–O8 must be preserved; additional checks may be added
 - EEF_Record structure must be preserved; fields may be added, not removed
+- GEM² framework, ΣΔ Principle, and OntologicalTerms must be preserved
 
 ---
 
 ## 2. Base Spec Corrections
 
-The spec is stable at v0.1.5-p but not finalized at v1.0.0.
+The spec is at v0.1.6 but not finalized at v1.0.0.
 Corrections are welcome for:
 - Logical inconsistencies within the spec
 - Notation errors (TLA+, math, grammar)
@@ -100,4 +100,4 @@ Open a GitHub Discussion. Do not open issues for general questions about TPMN co
 
 ---
 
-*TPMN-PSL v0.1.5-p · CC-BY 4.0 · Inseok Seo · 2026*
+*TPMN-PSL v0.1.6 · CC-BY 4.0 · Inseok Seo · 2026*

@@ -1,7 +1,7 @@
 # TPMN-PSL — Truth-Provenance Markup Notation
 ## Prompt Specification Language
 
-**Version:** v0.1.5-p | **Status:** Public | **License:** CC-BY 4.0
+**Version:** v0.1.6 | **Status:** Public | **License:** CC-BY 4.0
 
 > *"For complex, high-stakes AI workflows: don't write prompts. Write specifications."*
 
@@ -12,6 +12,40 @@
 AI outputs claims. Some are grounded in fact. Some are inferred. Some are extrapolated beyond evidence. Some are unknown. **Without a formal way to mark which is which, every AI output requires manual verification — or blind trust.**
 
 TPMN-PSL is a platform-agnostic notation standard that solves this by imposing a formal epistemic structure on AI reasoning: before generation, during generation, and after.
+
+---
+
+## The GEM² Universe
+
+TPMN-PSL operates within **GEM²** — *Grounded Existence Matrix for Global Entropy Minimum* — a mathematical universe where AI operates with provable boundaries.
+
+- **Grounded** — every element has a verifiable basis
+- **Existence** — ontological status is decidable: exists (⊢) or absent (⊥)
+- **Matrix** — discrete structural framework, finite, indexed, computable
+- **Global** — the mission: create ontological BEING that reflects human NL intent
+- **Entropy** — epistemic disorder the system measures and reduces
+- **Minimum** — convergence goal: closest approximation to human's need
+
+GEM² is platform-agnostic — the mathematical framework, not any specific implementation. GEM².AI is one platform realization of GEM².
+
+---
+
+## The ΣΔ Principle
+
+> *TPMN-PSL is the world of finite Σ of Δ, not infinite ∫ of δ.*
+
+All categories are finite sets. All evidence is enumerable. All membership is decidable. SET theory is the mathematical base — Panini extracts SETs from the NL world.
+
+**Ontological Terms:**
+
+| Term | Meaning |
+|------|---------|
+| DATA | Discrete, computable, verifiable, falsifiable element |
+| STATE | Discrete label from finite set |
+| STATUS | Continuous measurement from DATA within a STATE |
+| THRESHOLD | Cut point for STATE transitions |
+
+STATUS is the ∫δ world observed; THRESHOLD discretizes it into ΣΔ space.
 
 ---
 
@@ -54,13 +88,13 @@ Prompt → [P-phase] → LLM → [Inline] → Output → [O-phase] → Trust
 TPMN's notation is built on four layers — but they are **hierarchical, not parallel**:
 
 ```
-Panini (ontological discretization)   ← defines what can be reasoned about
-  └── TLA+  (structure)               ← expresses it formally
-  └── Math  (logic)                   ← adds quantifiers and connectives
-  └── NL    (commentary)              ← explains in natural language
+Panini (SET extraction from NL)      ← defines what can be reasoned about
+  └── TLA+  (structure)              ← expresses it formally
+  └── Math  (logic)                  ← adds quantifiers and connectives
+  └── NL    (commentary)             ← explains in natural language
 ```
 
-**Panini's role** is to carve the target domain into mutually exclusive, exhaustive, decidable categories *before reasoning begins* — transforming NL ambiguity into a computable MANDATE. This is the bridge from "what the human meant" to "what the LLM can be held to."
+**Panini's role** is to extract SETs from the NL world — carving the target domain into mutually exclusive, exhaustive, decidable categories *before reasoning begins* — transforming NL ambiguity into a computable MANDATE. This is the bridge from "what the human meant" to "what the LLM can be held to."
 
 ---
 
@@ -137,10 +171,10 @@ Any platform or domain can extend the base spec:
 
 ```tla
 --- MODULE MyDomain_TPMN_PSL ---
-EXTENDS TPMN_PSL  (* v0.1.5-p *)
+EXTENDS TPMN_PSL  (* v0.1.6 *)
 
-(* Add Tier2 domain glyphs, domain P/O checks, domain SPT patterns *)
-(* Preserve: all Tier1 glyphs · P0–P5 · O1–O8 · S→T · L→G · Δe→∫de *)
+(* Add domain P/O checks, domain SPT patterns, domain CONTRACT archetypes *)
+(* Preserve: GEM² · ΣΔ · OntologicalTerms · Tier1 glyphs · P0–P5 · O1–O8 · S→T · L→G · Δe→∫de *)
 ```
 
 Domain extension template: [`/extensions/template/`](extensions/template/)
@@ -152,6 +186,8 @@ Domain extension template: [`/extensions/template/`](extensions/template/)
 **TPMN** — Truth-Provenance Markup Notation — is an open specification language for structuring and auditing AI reasoning.
 
 **TPMN-PSL** (Prompt Specification Language) is the formal grammar that compiles NL prompts into computable, verifiable specifications (MANDATE).
+
+**GEM²** (Grounded Existence Matrix for Global Entropy Minimum) is the mathematical universe — platform-agnostic. GEM².AI is one platform realization.
 
 **TPMN-checker** is a Sovereign AI Service (SAS) — the reference implementation. It runs the TPMN-PSL three-phase pipeline and returns a truth_score for any AI output.
 
@@ -165,10 +201,11 @@ A **SAS** (Sovereign AI Service) is a microservice exclusively owned and control
 tpmn-psl/
 ├── README.md                          ← this file
 ├── spec/
-│   └── tpmn-psl-v015p.md              ← specification (authoritative)
+│   ├── tpmn-psl-v016.md              ← specification (authoritative)
+│   └── tpmn-psl-v015p.md             ← previous version
 ├── extensions/
 │   └── template/
-│       └── tpmn-domain-spec-0.1.5-p.md ← domain extension template
+│       └── tpmn-domain-spec-0.1.6.md  ← domain extension template
 ├── docs/                              ← GitHub Pages
 │   └── index.html
 ├── CITATION.cff                       ← machine-readable citation
@@ -188,7 +225,7 @@ TPMN-PSL is a **notation specification** — a platform-agnostic standard for ep
 - Can be implemented on any LLM (Claude, GPT, Gemini, open-source)
 - The specification itself is open (CC-BY 4.0)
 
-> Reference implementation: gem2-TPMN-checker (GEM²-AI) · implements TPMN-PSL v0.1.5-p
+> Reference implementation: gem2-TPMN-checker (GEM².AI) · implements TPMN-PSL v0.1.6
 > Live checker: [tpmn-checker.gemsquared.ai](https://tpmn-checker.gemsquared.ai)
 
 ---
@@ -200,7 +237,7 @@ TPMN-PSL is a **notation specification** — a platform-agnostic standard for ep
   title   = {TPMN-PSL: Truth-Provenance Markup Notation — Prompt Specification Language},
   author  = {Seo, Inseok},
   year    = {2026},
-  version = {0.1.5-p},
+  version = {0.1.6},
   license = {CC-BY-4.0},
   url     = {https://github.com/gem-squared/tpmn-psl}
 }
@@ -216,4 +253,4 @@ You are free to use, implement, extend, and build upon TPMN-PSL in any context �
 
 ---
 
-**TPMN-PSL v0.1.5-p · Inseok Seo · CC-BY 4.0 · 2026**
+**TPMN-PSL v0.1.6 · Inseok Seo · CC-BY 4.0 · 2026**
