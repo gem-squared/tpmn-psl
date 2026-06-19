@@ -1,0 +1,21 @@
+# Internal reference — not published
+spec/internal/
+spec/tpmn-psl-v014.md
+extensions/template/tpmn-domain-spec-0.1.4.md
+gitignore
+
+/temp/
+
+prompt.md
+/archive/
+
+/archive/*
+# ───── Confidential / internal — not for public repo ───────────────
+CLAUDE.md
+README-internal.md
+Doc/
+Doc/*
+.gem-squared/
+.gem-squared/*
+.claude/
+.claude/*

@@ -1,0 +1,27 @@
+name: Domain Extension Proposal
+description: Propose a new domain extension or discuss an in-progress one
+labels: ["domain-extension"]
+body:
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+      description: Which domain? (e.g. Medical, Legal, SDLC, Finance, Research)
+      placeholder: "Domain name"
+    validations:
+      required: true
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Rationale
+      description: Why does this domain need its own TPMN-PSL extension? What epistemic problems does it face?
+    validations:
+      required: true
+  - type: textarea
+    id: proposed-additions
+    attributes:
+      label: Proposed Additions
+      description: "Sketch any of: Tier2 glyphs, domain P/O checks, domain SPT violations, CONTRACT archetypes."
+      placeholder: "Optional: initial sketch of extension content"
+    validations:
+      required: false

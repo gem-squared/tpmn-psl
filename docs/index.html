@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-S5H4TDXEMV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-S5H4TDXEMV');
+  </script>
+  <title>TPMN-PSL v0.5.2 — Don't write prompts. Write specifications.</title>
+  <meta name="description" content="The open epistemic specification language for AI reasoning. Axiomatic foundation, geometric ontology, contract-driven verification. CC-BY-4.0.">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --border: #1e1e2e;
+      --accent: #7c6af7;
+      --accent2: #4ecdc4;
+      --text: #e2e2f0;
+      --muted: #888899;
+      --grounded: #4ecdc4;
+      --inferred: #7c6af7;
+      --extrap: #f7a94e;
+      --unknown: #888899;
+      --spec: #f7654e;
+      --mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --sans: 'Inter', system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      background: rgba(10,10,15,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .nav-brand { font-family: var(--mono); font-weight: 700; font-size: 1rem; color: var(--accent); letter-spacing: 0.04em; }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.875rem; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #fff; padding: 0.4rem 1.2rem;
+      border-radius: 6px; font-size: 0.875rem; font-weight: 600;
+      text-decoration: none; transition: opacity 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,106,247,0.12) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(124,106,247,0.1); border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 999px; padding: 0.3rem 1rem;
+      font-size: 0.8rem; color: var(--accent); margin-bottom: 2rem;
+      font-family: var(--mono);
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.5rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, var(--accent2) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted); max-width: 640px;
+      margin-bottom: 2.5rem; line-height: 1.6;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      padding: 0.75rem 2rem; border-radius: 8px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 24px rgba(124,106,247,0.35);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 4px 32px rgba(124,106,247,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      padding: 0.75rem 2rem; border-radius: 8px;
+      font-weight: 600; font-size: 1rem; text-decoration: none;
+      border: 1px solid var(--border); transition: border-color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--accent); }
+
+    /* ── DOI BADGE ── */
+    .doi-bar {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      margin-top: 1.5rem;
+    }
+    .doi-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(78,205,196,0.08); border: 1px solid rgba(78,205,196,0.25);
+      border-radius: 6px; padding: 0.3rem 0.8rem;
+      font-size: 0.75rem; color: var(--accent2);
+      font-family: var(--mono); text-decoration: none;
+      transition: border-color 0.2s;
+    }
+    .doi-badge:hover { border-color: var(--accent2); }
+    .npm-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: rgba(124,106,247,0.08); border: 1px solid rgba(124,106,247,0.25);
+      border-radius: 6px; padding: 0.3rem 0.8rem;
+      font-size: 0.75rem; color: var(--accent);
+      font-family: var(--mono); text-decoration: none;
+      transition: border-color 0.2s;
+    }
+    .npm-badge:hover { border-color: var(--accent); }
+
+    /* ── DOCS ── */
+    .docs { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .docs h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .docs-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .doc-grid { display: grid; gap: 1.5rem; }
+    .doc-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;
+      transition: border-color 0.2s;
+    }
+    .doc-card:hover { border-color: var(--accent); }
+    .doc-info { flex: 1; }
+    .doc-label {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 0.4rem;
+    }
+    .doc-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .doc-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .doc-link {
+      flex-shrink: 0; color: var(--accent); font-size: 0.85rem;
+      text-decoration: none; font-weight: 600;
+      padding: 0.4rem 1rem; border: 1px solid var(--accent);
+      border-radius: 6px; transition: all 0.2s;
+    }
+    .doc-link:hover { background: var(--accent); color: #fff; }
+
+    /* ── BEFORE/AFTER ── */
+    .demo { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .demo h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .demo-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+    .compare-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem; font-family: var(--mono); font-size: 0.85rem;
+    }
+    .compare-label {
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 1rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .before .compare-label { color: var(--spec); }
+    .after .compare-label { color: var(--grounded); }
+    .tag-g { color: var(--grounded); }
+    .tag-i { color: var(--inferred); }
+    .tag-e { color: var(--extrap); }
+    .tag-u { color: var(--unknown); }
+
+    /* ── SYMBOLS ── */
+    .symbols { padding: 5rem 2rem; background: var(--surface); }
+    .symbols-inner { max-width: 900px; margin: 0 auto; }
+    .symbols h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .symbols-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .symbol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; }
+    .symbol-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .symbol-card:hover { transform: translateY(-3px); }
+    .symbol-card:nth-child(1) { border-color: rgba(78,205,196,0.3); }
+    .symbol-card:nth-child(2) { border-color: rgba(124,106,247,0.3); }
+    .symbol-card:nth-child(3) { border-color: rgba(247,169,78,0.3); }
+    .symbol-card:nth-child(4) { border-color: rgba(136,136,153,0.3); }
+    .symbol-card:nth-child(5) { border-color: rgba(247,101,78,0.3); }
+    .sym { font-family: var(--mono); font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .sym-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.25rem; }
+    .sym-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── ONTOLOGY ── */
+    .ontology { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .ontology h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .ontology-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .ont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 640px) { .ont-grid { grid-template-columns: 1fr; } }
+    .ont-col h3 { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .ont-col:first-child h3 { color: var(--accent2); }
+    .ont-col:last-child h3 { color: var(--accent); }
+    .ont-item {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem;
+    }
+    .ont-name { font-family: var(--mono); font-weight: 700; font-size: 0.9rem; margin-bottom: 0.25rem; }
+    .ont-dim { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.25rem; }
+    .ont-desc { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── PROTOCOL ── */
+    .protocol { padding: 5rem 2rem; background: var(--surface); }
+    .protocol-inner { max-width: 900px; margin: 0 auto; }
+    .protocol h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .protocol-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+    @media (max-width: 640px) { .phases { grid-template-columns: 1fr; } }
+    .phase-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+    }
+    .phase-label {
+      font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .phase-name { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .phase-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .flow {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem;
+      font-family: var(--mono); font-size: 0.85rem;
+      color: var(--muted); text-align: center; letter-spacing: 0.03em;
+    }
+    .flow span { color: var(--accent); }
+
+    /* ── MANDATE ── */
+    .mandate { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .mandate h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .mandate-sub { color: var(--muted); margin-bottom: 2rem; }
+    .mandate-eq {
+      background: var(--surface); border: 1px solid rgba(124,106,247,0.3);
+      border-radius: 12px; padding: 1.5rem;
+      font-family: var(--mono); font-size: 0.9rem;
+      margin-bottom: 2rem; line-height: 1.8;
+    }
+    .mandate-props { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    @media (max-width: 640px) { .mandate-props { grid-template-columns: 1fr; } }
+    .prop-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem;
+    }
+    .prop-name { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent2); margin-bottom: 0.25rem; }
+    .prop-desc { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── SPT ── */
+    .spt { padding: 5rem 2rem; background: var(--surface); }
+    .spt-inner { max-width: 900px; margin: 0 auto; }
+    .spt h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .spt-sub { color: var(--muted); margin-bottom: 2.5rem; }
+    .spt-grid { display: grid; gap: 1rem; }
+    .spt-card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-left: 3px solid var(--extrap);
+      border-radius: 12px; padding: 1.25rem;
+    }
+    .spt-pattern { font-family: var(--mono); font-size: 0.9rem; font-weight: 700; color: var(--extrap); margin-bottom: 0.25rem; }
+    .spt-name { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .spt-ex { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+    /* ── INSTALL ── */
+    .install { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
+    .install h2 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.75rem; }
+    .install-sub { color: var(--muted); margin-bottom: 2rem; }
+    .install-code {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      font-family: var(--mono); font-size: 1rem;
+      color: var(--accent2); margin-bottom: 2rem;
+      text-align: center;
+    }
+    .install-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+    @media (max-width: 640px) { .install-features { grid-template-columns: 1fr; } }
+    .install-feature {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem;
+    }
+    .install-feature-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .install-feature-desc { font-size: 0.8rem; color: var(--muted); }
+
+    /* ── CTA ── */
+    .cta-section {
+      padding: 6rem 2rem; text-align: center;
+      background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(124,106,247,0.1) 0%, transparent 70%);
+    }
+    .cta-section h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+    .cta-section p { color: var(--muted); margin-bottom: 2.5rem; max-width: 480px; margin-left: auto; margin-right: auto; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border); padding: 2rem;
+      text-align: center; color: var(--muted); font-size: 0.8rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    section { scroll-margin-top: 56px; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">TPMN-PSL</div>
+  <div class="nav-links">
+    <a href="#docs">Docs</a>
+    <a href="#symbols">Symbols</a>
+    <a href="#ontology">Ontology</a>
+    <a href="#protocol">Protocol</a>
+    <a href="#mandate">Contract</a>
+    <a href="#spt">SPT</a>
+    <a href="#install">Install</a>
+  </div>
+  <a class="nav-cta" href="https://github.com/gem-squared/tpmn-psl" target="_blank">GitHub</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span>&#x2B21;</span> TPMN-PSL v0.5.2 &middot; Public &middot; CC-BY 4.0
+  </div>
+  <h1>Don't write prompts.<br>Write specifications.</h1>
+  <p class="hero-sub">
+    The open epistemic specification language for AI reasoning.
+    Built on GEM&sup2; &mdash; axiomatic foundation, geometric ontology,
+    contract-driven verification.
+    Platform-agnostic. Formally grounded.
+    Built to make AI know what it doesn't know.
+  </p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/gem-squared/tpmn-psl/releases/tag/v0.5.2" target="_blank">v0.5.2 Release</a>
+    <a class="btn-secondary" href="#docs">Read the Specs</a>
+  </div>
+  <div class="doi-bar">
+    <a class="doi-badge" href="https://doi.org/10.5281/zenodo.18336200" target="_blank">DOI: 10.5281/zenodo.18336200</a>
+    <a class="npm-badge" href="https://www.npmjs.com/package/@gem_squared/tpmn-skill-install" target="_blank">npm: @gem_squared/tpmn-skill-install</a>
+  </div>
+</section>
+
+<!-- DOCUMENTS -->
+<section class="docs" id="docs">
+  <h2>Specification documents</h2>
+  <p class="docs-sub">Three documents form the complete public reference. GEM&sup2; Core is the axiomatic foundation. PSL is the full specification. The field manual shows how to apply it.</p>
+  <div class="doc-grid">
+    <div class="doc-card">
+      <div class="doc-info">
+        <div class="doc-label">Foundation</div>
+        <div class="doc-title">GEM&sup2; Core v0.5.2</div>
+        <div class="doc-desc">5 axioms &rarr; 5 lemmas &rarr; 3 theorems + Composition Bridge (G<sub>ij</sub>). The axiomatic foundation: why F := &langle;A, B, P&rangle; works.</div>
+      </div>
+      <a class="doc-link" href="https://github.com/gem-squared/tpmn-psl/blob/main/spec/GEM2_core-v052.md" target="_blank">Read</a>
+    </div>
+    <div class="doc-card">
+      <div class="doc-info">
+        <div class="doc-label">Specification</div>
+        <div class="doc-title">TPMN-PSL v0.5.2</div>
+        <div class="doc-desc">Full specification &mdash; philosophical foundation, geometric ontology, compilation discipline, grammar, protocol, contract archetype, SOUND test, domain extension.</div>
+      </div>
+      <a class="doc-link" href="https://github.com/gem-squared/tpmn-psl/blob/main/spec/tpmn-psl-v052-p.md" target="_blank">Read</a>
+    </div>
+    <div class="doc-card">
+      <div class="doc-info">
+        <div class="doc-label">Field Manual</div>
+        <div class="doc-title">How to TPMN v0.5.2</div>
+        <div class="doc-desc">Practitioner's guide &mdash; step-by-step recipes for applying TPMN to real work. Compilation process, worked examples, pattern library.</div>
+      </div>
+      <a class="doc-link" href="https://github.com/gem-squared/tpmn-psl/blob/main/spec/how-to-tpmn-v052.md" target="_blank">Read</a>
+    </div>
+  </div>
+</section>
+
+<!-- BEFORE / AFTER -->
+<section class="demo" id="demo">
+  <h2>The difference TPMN makes</h2>
+  <p class="demo-sub">Same information. One version is auditable. One isn't.</p>
+  <div class="compare">
+    <div class="compare-card before">
+      <div class="compare-label">Without TPMN</div>
+      This architecture scales well and will handle production load. The latency will stay under 50ms at peak traffic. The team agrees this is the right approach.
+    </div>
+    <div class="compare-card after">
+      <div class="compare-label">With TPMN</div>
+      This architecture handled 10k RPS in staging <span class="tag-g">&#x22A2;</span>.<br>
+      Production load is estimated at 15k RPS <span class="tag-i">&#x22A8;</span> (Q3 traffic model).<br>
+      Latency under 50ms at peak <span class="tag-e">&#x22AC;</span> (no production benchmark yet).<br>
+      Team consensus on approach <span class="tag-i">&#x22A8;</span> (3 of 4 engineers).
+    </div>
+  </div>
+</section>
+
+<!-- SYMBOLS -->
+<section class="symbols" id="symbols">
+  <div class="symbols-inner">
+    <h2>The 5 epistemic symbols</h2>
+    <p class="symbols-sub">Every non-trivial claim in a TPMN-governed output carries exactly one tag.</p>
+    <div class="symbol-grid">
+      <div class="symbol-card">
+        <div class="sym tag-g">&#x22A2;</div>
+        <div class="sym-name">Grounded</div>
+        <div class="sym-desc">Directly supported by input or verifiable fact</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-i">&#x22A8;</div>
+        <div class="sym-name">Inferred</div>
+        <div class="sym-desc">Derived from grounded claims; inference chain visible</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-e">&#x22AC;</div>
+        <div class="sym-name">Extrapolated</div>
+        <div class="sym-desc">Beyond evidence; basis must be explicitly stated</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-u">&#x22A5;</div>
+        <div class="sym-name">Unknown</div>
+        <div class="sym-desc">Knowledge gap; stops inference chain</div>
+      </div>
+      <div class="symbol-card">
+        <div class="sym tag-u">?</div>
+        <div class="sym-name">Speculative</div>
+        <div class="sym-desc">Possible but unverified</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GEOMETRIC ONTOLOGY -->
+<section class="ontology" id="ontology">
+  <h2>Geometric ontology</h2>
+  <p class="ontology-sub">Two vocabularies map to Kant's noumenon / phenomenon distinction. Ontological terms name what beings ARE. Topological terms name how beings APPEAR in relation.</p>
+  <div class="ont-grid">
+    <div class="ont-col">
+      <h3>Ontological &mdash; noumenal</h3>
+      <div class="ont-item">
+        <div class="ont-name">point</div>
+        <div class="ont-dim">0D &mdash; atomic element</div>
+        <div class="ont-desc">An entity. David, gem2-lfs, the Q3 report.</div>
+      </div>
+      <div class="ont-item">
+        <div class="ont-name">line</div>
+        <div class="ont-dim">1D &mdash; directional vector</div>
+        <div class="ont-desc">A verb, adjective, adverb. Failing, decomposing, becoming-stable.</div>
+      </div>
+      <div class="ont-item">
+        <div class="ont-name">face</div>
+        <div class="ont-dim">2D &mdash; bounded local complex space &#x2102;<sub>F</sub></div>
+        <div class="ont-desc">An independent space defined by CONTRACT. Humans, valid functions, completed work-plans.</div>
+      </div>
+    </div>
+    <div class="ont-col">
+      <h3>Topological &mdash; phenomenal</h3>
+      <div class="ont-item">
+        <div class="ont-name">STATE</div>
+        <div class="ont-dim">point &isin; face</div>
+        <div class="ont-desc">Membership relation. David is human. The WP is COMPLETED.</div>
+      </div>
+      <div class="ont-item">
+        <div class="ont-name">STATUS</div>
+        <div class="ont-dim">vector at point</div>
+        <div class="ont-desc">Continuous, directional. The WP is becoming complete. The build is running.</div>
+      </div>
+      <div class="ont-item">
+        <div class="ont-name">SET</div>
+        <div class="ont-dim">subset within face</div>
+        <div class="ont-desc">Recognized category. The set of completed WPs. Valid inputs.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOCOL -->
+<section class="protocol" id="protocol">
+  <div class="protocol-inner">
+    <h2>Three-phase checking protocol</h2>
+    <p class="protocol-sub">P-phase draws the boundary. Inline executes within it. O-phase judges the edge crossing. Operational form of human-at-the-edge.</p>
+    <div class="phases">
+      <div class="phase-card">
+        <div class="phase-label">P-phase &middot; Boundary</div>
+        <div class="phase-name">Pre-flight</div>
+        <div class="phase-desc">Extract CONTRACT from prompt. Establish A_Priori_Grid. Define the bounded face before inference begins.</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">Inline &middot; Sovereign</div>
+        <div class="phase-name">Generation</div>
+        <div class="phase-desc">Producer operates autonomously inside F. Tag every non-trivial claim with its epistemic symbol. Sovereignty within the contract boundary.</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-label">O-phase &middot; Edge</div>
+        <div class="phase-name">Post-flight</div>
+        <div class="phase-desc">Verify output against CONTRACT. Check SPT violations. Audit the edge crossing. Gate or pass.</div>
+      </div>
+    </div>
+    <div class="flow">
+      Prompt &rarr; <span>[P-phase]</span> &rarr; LLM &rarr; <span>[Inline]</span> &rarr; Output &rarr; <span>[O-phase]</span> &rarr; Trust
+    </div>
+  </div>
+</section>
+
+<!-- CONTRACT -->
+<section class="mandate" id="mandate">
+  <h2>The CONTRACT</h2>
+  <p class="mandate-sub">F is the producer's sovereign space. The contract defines its boundary. Within this boundary, execution is autonomous.</p>
+  <div class="mandate-eq">
+    F := &langle;A, B, P&rangle;<br><br>
+    <span style="color:var(--muted)">A: input type &middot; B: output type &middot; P: constraint<br>
+    &#x2102;<sub>F</sub> = { (a, b) | a : A, b : B, P(a,b) }<br><br>
+    Geom(F) = A + B&#x1D4F2; &nbsp;&mdash;&nbsp; ontology, relation, and geometry share one structure</span>
+  </div>
+  <div class="mandate-props">
+    <div class="prop-card">
+      <div class="prop-name">Bounded</div>
+      <div class="prop-desc">Each F has its own &#x2102;<sub>F</sub>, bounded by P. No shared global plane.</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-name">Sovereign</div>
+      <div class="prop-desc">Inside F, the producer is autonomous. The contract defines the boundary, not the orchestrator.</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-name">Composable</div>
+      <div class="prop-desc">G<sub>ij</sub> := &langle;B<sub>i</sub>, A<sub>j</sub>, P<sub>ij</sub>&rangle; &mdash; contract-to-contract handoff via Composition Bridge.</div>
+    </div>
+    <div class="prop-card">
+      <div class="prop-name">Verifiable</div>
+      <div class="prop-desc">SOUND(u, D, &sigma;) tests all five compilation principles. Per-principle audit, not pass/fail.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SPT -->
+<section class="spt" id="spt">
+  <div class="spt-inner">
+    <h2>Structural Prohibition Taxonomy</h2>
+    <p class="spt-sub">Three inference patterns that TPMN-governed output must never produce. Each is an operational instance of CTRST failure.</p>
+    <div class="spt-grid">
+      <div class="spt-card">
+        <div class="spt-pattern">S &rarr; T</div>
+        <div class="spt-name">State &rarr; Trait</div>
+        <div class="spt-ex">"This model is slow" (benchmark) &rarr; "This model is inherently slow" (permanent property)</div>
+      </div>
+      <div class="spt-card">
+        <div class="spt-pattern">L &rarr; G</div>
+        <div class="spt-name">Local &rarr; Global</div>
+        <div class="spt-ex">"Works in our staging" &rarr; "Works in all production environments"</div>
+      </div>
+      <div class="spt-card">
+        <div class="spt-pattern">&Delta;e &rarr; &int;de</div>
+        <div class="spt-name">Incremental &rarr; Mass</div>
+        <div class="spt-ex">One data point &rarr; broad universal claim without stated evidence count</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section class="install" id="install">
+  <h2>12 lifecycle skills for Claude Code</h2>
+  <p class="install-sub">Plan, execute, verify, archive. Contract-driven workflow that compounds knowledge across sessions.</p>
+  <div class="install-code">npx @gem_squared/tpmn-skill-install</div>
+  <div class="install-features">
+    <div class="install-feature">
+      <div class="install-feature-name">Plan</div>
+      <div class="install-feature-desc">Decompose work into contracted units. A &rarr; B | P. Clarity %. No ad-hoc execution.</div>
+    </div>
+    <div class="install-feature">
+      <div class="install-feature-name">Verify</div>
+      <div class="install-feature-desc">Check results against contracts. Field coverage, type conformance, constraint satisfaction. Structural, not opinion.</div>
+    </div>
+    <div class="install-feature">
+      <div class="install-feature-name">Compound</div>
+      <div class="install-feature-desc">Archive proven patterns. Search prior art. Extract skills from verified work. Knowledge grows, skill count stays fixed.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Start with the spec.</h2>
+  <p>Read the full TPMN-PSL v0.5.2 specification. Extend it for your domain. Build on it.</p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="https://github.com/gem-squared/tpmn-psl/releases/tag/v0.5.2" target="_blank">v0.5.2 Release</a>
+    <a class="btn-secondary" href="https://github.com/gem-squared/tpmn-psl/tree/main/spec" target="_blank">Browse Specs</a>
+  </div>
+</section>
+
+<footer>
+  TPMN-PSL v0.5.2 &middot; Inseok Seo / GEM&sup2;.AI &middot; CC-BY 4.0 &middot; 2026 &middot;
+  <a href="https://doi.org/10.5281/zenodo.18336200" target="_blank">Zenodo</a> &middot;
+  <a href="https://github.com/gem-squared/tpmn-psl" target="_blank">GitHub</a> &middot;
+  <a href="https://www.npmjs.com/package/@gem_squared/tpmn-skill-install" target="_blank">npm</a>
+</footer>
+
+</body>
+</html>

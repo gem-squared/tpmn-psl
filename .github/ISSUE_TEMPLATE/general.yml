@@ -1,0 +1,11 @@
+name: General Issue
+description: Report a bug, request a feature, or flag a documentation problem
+labels: ["triage"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What's the issue?
+    validations:
+      required: true
